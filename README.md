@@ -1,45 +1,99 @@
-usage: git [--version] [--help] [-C <path>] [-c <name>=<value>]
-           [--exec-path[=<path>]] [--html-path] [--man-path] [--info-path]
-           [-p | --paginate | -P | --no-pager] [--no-replace-objects] [--bare]
-           [--git-dir=<path>] [--work-tree=<path>] [--namespace=<name>]
-           [--super-prefix=<path>] [--config-env=<name>=<envvar>]
-           <command> [<args>]
+# JànguXayma AI
 
-These are common Git commands used in various situations:
+### 📌 Plateforme intelligente d'évaluation automatisée des exercices de bases de données
 
-start a working area (see also: git help tutorial)
-   clone     Clone a repository into a new directory
-   init      Create an empty Git repository or reinitialize an existing one
+## 🚀 Présentation
+JànguXayma AI est une plateforme intelligente permettant aux étudiants d'uploader leurs exercices en bases de données. Une IA analyse et corrige automatiquement leurs travaux, fournissant des feedbacks détaillés et des statistiques pour améliorer l’apprentissage.
 
-work on the current change (see also: git help everyday)
-   add       Add file contents to the index
-   mv        Move or rename a file, a directory, or a symlink
-   restore   Restore working tree files
-   rm        Remove files from the working tree and from the index
+## 🛠 Technologies utilisées
 
-examine the history and state (see also: git help revisions)
-   bisect    Use binary search to find the commit that introduced a bug
-   diff      Show changes between commits, commit and working tree, etc
-   grep      Print lines matching a pattern
-   log       Show commit logs
-   show      Show various types of objects
-   status    Show the working tree status
+### Backend :
+- **Django** (Python) - Framework web
+- **PostgreSQL** - Base de données relationnelle
+- **DeepSeek AI (via Ollama)** - Moteur d’évaluation intelligente
+- **Django REST Framework (DRF)** - API REST
 
-grow, mark and tweak your common history
-   branch    List, create, or delete branches
-   commit    Record changes to the repository
-   merge     Join two or more development histories together
-   rebase    Reapply commits on top of another base tip
-   reset     Reset current HEAD to the specified state
-   switch    Switch branches
-   tag       Create, list, delete or verify a tag object signed with GPG
+### Frontend :
+- **React** - Interface utilisateur dynamique
+- **TailwindCSS & DaisyUI** - UI moderne et responsive
 
-collaborate (see also: git help workflows)
-   fetch     Download objects and refs from another repository
-   pull      Fetch from and integrate with another repository or a local branch
-   push      Update remote refs along with associated objects
+### DevOps & Déploiement :
+- **Docker** - Conteneurisation
+- **Amazon EC2** - Hébergement
+- **NGINX** - Serveur proxy
 
-'git help -a' and 'git help -g' list available subcommands and some
-concept guides. See 'git help <command>' or 'git help <concept>'
-to read about a specific subcommand or concept.
-See 'git help git' for an overview of the system.
+---
+
+## 🏗 Installation et Configuration
+
+### 1️⃣ Cloner le projet
+```sh
+git clone https://github.com/janguXayma/backend.git
+cd backend
+```
+
+### 2️⃣ Backend - Django
+#### 📌 Configuration
+- **Créer et activer un environnement virtuel**
+```sh
+python -m venv venv
+source venv/bin/activate  # macOS/Linux
+venv\Scripts\activate  # Windows
+```
+
+- **Installer les dépendances**
+```sh
+pip install -r requirements.txt
+```
+
+- **Créer un fichier `.env` et copier celui de `.env.example`
+```sh
+cp .env.example .env
+```
+
+
+- **Appliquer les migrations et lancer le serveur**
+```sh
+python manage.py makemigration
+python manage.py migrate
+python manage.py runserver
+```
+
+### 3️⃣ Frontend - React
+```sh
+cd frontend
+npm install
+npm start
+```
+
+---
+
+## 🔥 Fonctionnalités principales
+✅ Upload des fichiers SQL par les étudiants  
+✅ Correction automatique via IA  
+✅ Explication détaillée des erreurs  
+✅ Génération de statistiques sur les performances  
+✅ Interface moderne et intuitive  
+✅ Possibilité pour les professeurs d'affiner la correction  
+
+---
+
+## 🛠 Déploiement (Docker)
+- **Créer une image Docker et lancer le conteneur**
+```sh
+docker-compose up --build
+```
+
+---
+
+## 📜 Licence
+Ce projet est sous licence **ESP**.
+
+📩 **Contact :** 
+
+## 🧑‍💻 Contributeurs
+Omar DIOP
+Mouhamed THIAM
+Nafissatou M SOW
+Mouhamed DIAHATE
+Ndeye Mareme GUEYE
