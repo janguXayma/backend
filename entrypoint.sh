@@ -15,4 +15,4 @@ done
 python manage.py makemigrations
 python manage.py migrate
 # Lancer le serveur avec Gunicorn
-exec gunicorn --bind 0.0.0.0:8000 celeryRedis.wsgi:application
+exec gunicorn --bind 0.0.0.0:8000 backend.wsgi:application
