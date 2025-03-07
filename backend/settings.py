@@ -132,3 +132,28 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Celery settings
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
+CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND')
+CELERY_ACCEPT_CONTENT = ['json']  # Format des messages acceptés
+CELERY_TASK_SERIALIZER = 'json'  # Sérialisation des tâches
+CELERY_RESULT_SERIALIZER = 'json'  # Sérialisation des résultats
+CELERY_TIMEZONE = 'UTC'  # Fuseau horaire (ajustez selon vos besoins)
+CELERY_ENABLE_UTC = True  # Utiliser UTC pour la gestion du temps
+# Nombre maximum de tâches simultanées par worker
+CELERYD_CONCURRENCY = 4 
+
+# Tâches périodiques (si vous en avez besoin)
+CELERY_BEAT_SCHEDULE = {
+    'task_name': {
+        'task': 'path.to.task',
+        'schedule': 10.0,  # Intervalle en secondes
+    },
+}
+
+# Mode de journalisation des tâches
+CELERYD_LOG_COLOR = True  # Coloriser les logs dans la console
+CELERYD_LOG_FORMAT = '%(asctime)s [%(levelname)s]: %(message)s'  # Format des logs
+
