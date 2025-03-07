@@ -18,13 +18,13 @@ JànguXayma AI est une plateforme intelligente permettant aux étudiants d'uploa
 - **TailwindCSS & DaisyUI** - UI moderne et responsive
 
 ### DevOps & Déploiement :
-- **Docker** - Conteneurisation
+- **Docker & Docker Compose** - Conteneurisation et orchestration
 - **Amazon EC2** - Hébergement
 - **NGINX** - Serveur proxy
 
 ---
 
-## 🏗 Installation et Configuration
+## 🏰 Installation et Configuration
 
 ### 1️⃣ Cloner le projet
 ```sh
@@ -46,15 +46,14 @@ venv\Scripts\activate  # Windows
 pip install -r requirements.txt
 ```
 
-- **Créer un fichier `.env` et copier celui de `.env.example`
+- **Créer un fichier `.env` et copier celui de `.env.example`**
 ```sh
 cp .env.example .env
 ```
 
-
 - **Appliquer les migrations et lancer le serveur**
 ```sh
-python manage.py makemigration
+python manage.py makemigrations
 python manage.py migrate
 python manage.py runserver
 ```
@@ -78,22 +77,59 @@ npm start
 
 ---
 
-## 🛠 Déploiement (Docker)
-- **Créer une image Docker et lancer le conteneur**
+## 🛠 Déploiement avec Docker Compose
+### Prérequis
+- Avoir **Docker** et **Docker Compose** installés sur votre machine.
+
+### Lancer l'application avec Docker Compose
 ```sh
-docker-compose up --build
+docker-compose up -d --build
+```
+Cela va créer et démarrer les conteneurs pour le backend, le frontend et la base de données PostgreSQL.
+
+### Arrêter les conteneurs
+```sh
+docker-compose down
+```
+
+### Exécuter les migrations avec Docker
+```sh
+docker-compose exec backend python manage.py migrate
+```
+
+### Accéder aux logs
+```sh
+docker-compose logs -f
 ```
 
 ---
 
-## 📜 Licence
+## 🌟 Améliorations futures
+- Intégration d’un système de feedback personnalisé
+- Ajout d’un mode examen avec notation automatique
+- Dashboard avancé pour les enseignants
+
+---
+
+## 🐝 Contribuer
+Les contributions sont les bienvenues ! Merci de suivre ces étapes :
+1. **Forker** le projet
+2. **Créer** une branche feature (`git checkout -b feature-ma-feature`)
+3. **Commit** vos modifications (`git commit -m 'Ajout d'une nouvelle fonctionnalité'`)
+4. **Pousser** vers votre repo (`git push origin feature-ma-feature`)
+5. **Créer** une Pull Request
+
+---
+
+## 🌇 Licence
 Ce projet est sous licence **ESP**.
 
-📩 **Contact :** 
+👥 **Contributeurs**
+- Omar DIOP  
+- Mouhamed THIAM  
+- Nafissatou M SOW  
+- Mouhamed DIAHATE  
+- Ndeye Mareme GUEYE  
 
-## 🧑‍💻 Contributeurs
-Omar DIOP
-Mouhamed THIAM
-Nafissatou M SOW
-Mouhamed DIAHATE
-Ndeye Mareme GUEYE
+📩 **Contact :** [email@example.com](mailto:email@example.com)
+
