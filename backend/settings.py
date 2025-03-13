@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 import os
+from datetime import timedelta
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -57,8 +58,10 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
-    'http://127.0.0.1:3000',
+    'http://localhost:8000',
 ]
+CORS_ALLOW_CREDENTIALS = True  # Autorise les cookies et l'authentification avec CORS
+CORS_ORIGIN_ALLOW_ALL = False  # Ne pas autoriser toutes les origines
 
 ROOT_URLCONF = 'backend.urls'
 
@@ -177,6 +180,64 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+
+AUTH_USER_MODEL = 'authentication.User'
+
+#Rest Framework
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
+
+#Token
+SIMPLE_JWT = {
+    # Durée de vie de l'access token (50 minutes)
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=50),
+    # Durée de vie du refresh token (3 jours)
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=3),
+    
+    # Sécurisation de la rotation des refresh tokens
+    "ROTATE_REFRESH_TOKENS": True,  # Activez la rotation des tokens de rafraîchissement
+    "BLACKLIST_AFTER_ROTATION": True,  # Les tokens de rafraîchissement sont mis en liste noire après utilisation
+
+    # Empêcher la mise à jour du login à chaque utilisation du token
+    "UPDATE_LAST_LOGIN": False,
+
+    # Sécuriser l'algorithme
+    "ALGORITHM": "HS256",  # Utilisation de HS256 pour une bonne balance entre performance et sécurité
+
+    #sécurité pour vérifier les tokens
+    "VERIFYING_KEY": "", 
+    "AUDIENCE": None,
+    "ISSUER": None,
+    "LEEWAY": 0,
+
+    # Authentification via le header Bearer
+    "AUTH_HEADER_TYPES": ("Bearer",),
+    "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
+
+    # Configuration des claims
+    "USER_ID_FIELD": "id",  # Utilisation de l'ID de l'utilisateur pour identifier
+    "USER_ID_CLAIM": "user_id",
+
+    # Configuration pour les tokens de type Access
+    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
+    "TOKEN_TYPE_CLAIM": "token_type",
+
+    # Configuration des serializers
+    # "TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainPairSerializer",
+    "TOKEN_OBTAIN_SERIALIZER": "authentication.serializers.MyTOPS",
+    "TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSerializer",
+    "TOKEN_VERIFY_SERIALIZER": "rest_framework_simplejwt.serializers.TokenVerifySerializer",
+    "TOKEN_BLACKLIST_SERIALIZER": "rest_framework_simplejwt.serializers.TokenBlacklistSerializer",
+}
+
+
+
 
 
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
