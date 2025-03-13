@@ -10,6 +10,7 @@ echo "Creation de l'utilisateur et la base de donnees..."
 PGPASSWORD=$POSTGRES_PASSWORD psql -h db -U $POSTGRES_USER -c "CREATE USER $POSTGRES_USER WITH PASSWORD '$POSTGRES_PASSWORD';" || echo "L'utilisateur existe deja ou une erreur s'est produite."
 PGPASSWORD=$POSTGRES_PASSWORD psql -h db -U $POSTGRES_USER -c "CREATE DATABASE $POSTGRES_DB WITH OWNER $POSTGRES_USER;" || echo "La base de donnees existe deja ou une erreur s'est produite."
 
+
 # Attendre que PostgreSQL soit prêt
 MAX_RETRIES=10
 RETRY_COUNT=0
