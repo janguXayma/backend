@@ -62,7 +62,11 @@ class Profile(models.Model):
     phone_number = models.CharField(max_length=15, blank=True, null=True)
     location = models.CharField(max_length=255, blank=True, null=True)
     birth_date = models.DateField(null=True, blank=True)
-        # Champs spécifiques aux enseignants
+    # Champs spécifiques aux etudiants
+    grade = models.CharField(max_length=50, blank=True, null=True)
+    class_level = models.CharField(max_length=100,blank=True, null=True)
+    enrollment_year = models.DateField(blank=True, null=True)
+    # Champs spécifiques aux enseignants
     department = models.CharField(max_length=255, blank=True, null=True)
     expertise = models.TextField(blank=True, null=True)
     office_number = models.CharField(max_length=50, blank=True, null=True)
@@ -77,6 +81,9 @@ def create_user_profile(sender, instance, created, **kwargs):
         Profile.objects.create(user=instance)
         if instance.is_student:
             Student.objects.create(user=instance)
+            instance.profile.grade = "Grade a definir"
+            instance.profile.class_level = "Niveau a definir"
+            instance.profile.enrollment_year = "Annee a definir"
         elif instance.is_teacher:
             Teacher.objects.create(user=instance)
             instance.profile.department = "Departement a definir"
