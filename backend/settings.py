@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'authentication',
+    'rest_framework.authtoken',
+    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
@@ -121,6 +123,42 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+#Logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers':False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style':'{'
+        },
+        'style':{
+            'format':'{levelname} {message}',
+            'style':'{'
+        },
+    },
+    'handlers': {
+        'file':{
+            'level':'DEBUG',
+            'class':'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR,'logs','debug.log'),
+            'formatter':'verbose',
+        },
+        'console': {
+            'level':'INFO',
+            'class':'logging.StreamHandler',
+            'formatter':'style',
+        },
+    },
+    'loggers':{
+        'django':{
+            'handlers':['file','console'],
+            'level':'DEBUG',
+            'propagate':True,
+        },
+    },
+}
 
 
 # Internationalization
