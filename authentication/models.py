@@ -41,6 +41,9 @@ class User(AbstractUser):
 #Modele Etudiant
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True,related_name='student')
+    grade = models.CharField(max_length=50, blank=True, null=True)
+    class_level = models.CharField(max_length=100,blank=True, null=True)
+    enrollment_year = models.DateField(blank=True, null=True)
     
     def __str__(self):
         return f"{self.user.email} - Etudiant"
@@ -48,6 +51,9 @@ class Student(models.Model):
 #Modele Enseignant
 class Teacher(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True,related_name='teacher')
+    department = models.CharField(max_length=255, blank=True, null=True)
+    expertise = models.TextField(blank=True, null=True)
+    office_number = models.CharField(max_length=50, blank=True, null=True)
     
     def __str__(self):
         return f"{self.user.email} - Enseignant"
@@ -62,14 +68,8 @@ class Profile(models.Model):
     phone_number = models.CharField(max_length=15, blank=True, null=True)
     location = models.CharField(max_length=255, blank=True, null=True)
     birth_date = models.DateField(null=True, blank=True)
-    # Champs spécifiques aux etudiants
-    grade = models.CharField(max_length=50, blank=True, null=True)
-    class_level = models.CharField(max_length=100,blank=True, null=True)
-    enrollment_year = models.DateField(blank=True, null=True)
-    # Champs spécifiques aux enseignants
-    department = models.CharField(max_length=255, blank=True, null=True)
-    expertise = models.TextField(blank=True, null=True)
-    office_number = models.CharField(max_length=50, blank=True, null=True)
+    gender = models.CharField(max_length=255, blank=True)
+
 
     def __str__(self):
         return f"{self.user.email}"
@@ -80,15 +80,16 @@ def create_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
         if instance.is_student:
-            Student.objects.create(user=instance)
-            instance.profile.grade = "Grade a definir"
-            instance.profile.class_level = "Niveau a definir"
-            instance.profile.enrollment_year = "Annee a definir"
+            student = Student.objects.create(user=instance)
+            student.grade = "Grade a definir"
+            student.class_level = "Niveau a definir"
+            student.enrollment_year = None
+            student.save()
         elif instance.is_teacher:
-            Teacher.objects.create(user=instance)
-            instance.profile.department = "Departement a definir"
-            instance.profile.expertise = "Expertise a definir"
-            instance.profile.office_number = "Bureau a definir"
+            teacher = Teacher.objects.create(user=instance)
+            teacher.department = "Département à définir"
+            teacher.expertise = "Expertise à définir"
+            teacher.office_number = "Bureau à définir"
             instance.profile.save()
 
 
