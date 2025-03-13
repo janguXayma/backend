@@ -84,8 +84,12 @@ class RegisterSerializer(serializers.Serializer):
     #Creer un utilisateur en fonction de son profile
     def create(self, validated_data):
         validated_data.pop('confirm_password')
+        email = validated_data['email']
+        username = email.split('@')[0]
+
         user = User.objects.create_user(
-            email = validated_data['eamil'],
+            email=email,
+            username=username, 
             password = validated_data['password'],
             is_student = validated_data['role'] == 'Student',
             is_teacher = validated_data['role'] == 'Teacher'

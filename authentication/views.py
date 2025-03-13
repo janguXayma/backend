@@ -15,28 +15,18 @@ class MyTokenObtainPairView(TokenObtainPairView):
 class RegisterView(APIView):
     permission_classes = [AllowAny]
 
-    def post(self,request):
+    def post(self, request):
         serializer = RegisterSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        #Creer un utilisateur
-        user_data = serializer.validated_data
-        try:
-            user = User.objects.create_user(
-                email=user_data['email'],
-                password=user_data['password'],
-                is_student=user_data['role'] == 'Student',
-                is_teacher=user_data['role'] == 'Teacher'
-            )
-        except Exception as e:
-            return Response({'error': str(e)}, status=400)
+        user = serializer.save()  # Utilisation de save() directement
 
-        # Retourner une réponse de succès avec les données de l'utilisateur
         return Response({
             'status': 'User created successfully',
             'user': {
                 'email': user.email,
-                'role': user_data['role']
+                'username': user.username, 
+                'role': 'Student' if user.is_student else 'Teacher' if user.is_teacher else 'User'
             }
         }, status=201)
 

@@ -7,6 +7,7 @@ import uuid
 # Create your models here.
 class User(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    username = models.CharField(max_length=150, unique=True, blank=True)
     email = models.EmailField(unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -16,7 +17,7 @@ class User(AbstractUser):
     is_teacher = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['email']
+    REQUIRED_FIELDS = []
 
     groups = models.ManyToManyField(
         'auth.Group',
@@ -34,6 +35,10 @@ class User(AbstractUser):
         related_name='api_user_permissions',  # Nom personnalisé
         related_query_name='api_user',
     )
+    def save(self,*args, **kwargs):
+        if not self.username:
+            self.username = self.email.split('@')[0]
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.email
