@@ -6,6 +6,8 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import MyTOPS, RegisterSerializer, UserSerializer, TeacherSerializer, StudentSerializer
 from .models import User, Student, Teacher, Profile
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from dj_rest_auth.registration.views import SocialLoginView
 
 # Create your views here.
 
@@ -55,4 +57,7 @@ class UserProfileView(APIView):
         }
 
         return Response(user_data, status=200)
+    
+class GoogleLogin(SocialLoginView):
+    adapter_class = GoogleOAuth2Adapter
 
