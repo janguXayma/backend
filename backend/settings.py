@@ -32,6 +32,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'authentication',
+    'classe',
+    #jwt token
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
     # Pour Google
