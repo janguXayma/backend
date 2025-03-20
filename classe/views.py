@@ -8,6 +8,7 @@ from .models import Classe
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
+from rest_framework.decorators import action
 
 # Create your views here.
 
@@ -35,23 +36,43 @@ class ClasseViewSet(viewsets.ModelViewSet):
         
         return super().create(request, *args, **kwargs)
     
+    def update(self, request, *args, **kwargs):
+        """Seuls les enseignants peuvent modifier une classe"""
+        classe = self.get_object()
+        if classe.teacher.user != request.user:
+            return Response({"detail": "Vous n'avez pas la permission de modifier cette classe."}, status=403)
+        return super().update(request, *args, **kwargs)
 
+    def destroy(self, request, *args, **kwargs):
+        """Empêche la suppression d'une classe si ce n'est pas un enseignant"""
+        classe = self.get_object()
+        if classe.teacher.user != request.user:
+            return Response({"detail": "Vous ne pouvez pas supprimer cette classe."}, status=403)
+        return super().destroy(request, *args, **kwargs)
+    
+
+    @action(detail=False, methods=['post'], url_path='join-class')
     def join_class(self, request, *args, **kwargs):
-        """Permet à un étudiant de rejoindre une classe en utilisant le code d'activation"""
-        code_activation = request.data.get('code_activation')
+        """Permet à un étudiant de rejoindre une classe en utilisant le code d'activation."""
         user = request.user
-        student = get_object_or_404(Student, user=user)
-        
-        try:
-            classe = get_object_or_404(Classe, code_activation=code_activation)
-        except Classe.DoesNotExist:
-            return Response({"detail": "Classe non trouvée."}, status=404)
+        if user.is_anonymous:
+            return Response({"detail": "Authentification requise."}, status=status.HTTP_401_UNAUTHORIZED)
 
-        if student in classe.students.all():
-            return Response({"message": "Vous êtes déjà inscrit à cette classe."}, status=200)
+        student = Student.objects.filter(user=user).first()
+        if not student:
+            return Response({"detail": "Vous devez être un étudiant pour rejoindre une classe."}, status=status.HTTP_403_FORBIDDEN)
+
+        code_activation = request.data.get('code_activation')
+        if not code_activation:
+            return Response({"detail": "Veuillez fournir un code d'activation."}, status=status.HTTP_400_BAD_REQUEST)
+
+        classe = get_object_or_404(Classe, code_activation=code_activation)
+
+        if classe.students.filter(user=student.user).exists():
+            return Response({"message": "Vous êtes déjà inscrit à cette classe."}, status=status.HTTP_200_OK)
 
         classe.students.add(student)
-        return Response({"message": f"Étudiant {student} ajouté à la classe {classe}."}, status=200)
+        return Response({"message": f"Étudiant {student.user.username} ajouté à la classe {classe.name}."}, status=status.HTTP_200_OK)
     
 
 

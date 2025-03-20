@@ -8,5 +8,4 @@ router.register(r'classes', ClasseViewSet,basename='classe')
 
 urlpatterns =[
     path('', include(router.urls)),
-    path('join-class/', ClasseViewSet.as_view({'post': 'join_class'}), name='join_class')
 ]
