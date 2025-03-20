@@ -1,17 +1,26 @@
 from django.db import models
 from authentication.models import Student,Teacher
-from .utils import Utils
 import uuid
+import random
+import string
 
+
+def generate_activation_code():
+    """Generate a random activation code of 4 characters."""
+    while True:
+        code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=4))
+        if not Classe.objects.filter(code_activation=code).exists():
+            return code
+        
 # Create your models here.
 class Classe(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100,blank=False, null=False)
     code_activation = models.CharField(max_length=4, unique=True, 
-                                       default=Utils.generate_activation_code,editable=False)
+                                       default=generate_activation_code,editable=False)
     description = models.TextField(blank=True, null=True)
     students = models.ManyToManyField(Student, related_name='classes', blank=True)
-    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='classes', null=True, blank=True)
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='classes')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     def __str__(self):
