@@ -1,11 +1,24 @@
 from django.shortcuts import render
-from django.shortcuts import render
+from django.shortcuts import redirect
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework import generics
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import MyTOPS, RegisterSerializer, UserSerializer, TeacherSerializer, StudentSerializer
 from .models import User, Student, Teacher, Profile
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from dj_rest_auth.registration.views import SocialLoginView
+from allauth.socialaccount.models import SocialToken, SocialAccount
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+import json
+from django.contrib.auth import get_user_model
+from django.core.exceptions import MultipleObjectsReturned
+from rest_framework import status
+from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 
 # Create your views here.
 
@@ -29,7 +42,14 @@ class RegisterView(APIView):
                 'role': 'Student' if user.is_student else 'Teacher' if user.is_teacher else 'User'
             }
         }, status=201)
+class UserDetailView(generics.RetrieveUpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
 
+    def get_object(self):
+        return self.request.user
+    
 class UserProfileView(APIView):
     permission_classes = [IsAuthenticated]  # Seuls les utilisateurs authentifiés peuvent accéder
 
@@ -55,4 +75,51 @@ class UserProfileView(APIView):
         }
 
         return Response(user_data, status=200)
+    
+
+User = get_user_model()
+
+class GoogleLogin(SocialLoginView):
+    adapter_class = GoogleOAuth2Adapter
+    client_class = OAuth2Client
+
+    def post(self, request, *args, **kwargs):
+        try:
+            # Récupérez le token Google depuis le corps de la requête
+            token = request.data.get('token')
+            if not token or not isinstance(token, str):
+                return Response(
+                    {"detail": "A valid token string is required."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            # Transformez le token en format attendu par allauth
+            request.data.update({
+                'code': token,  # Utilisez le token comme code
+                'id_token': token,  # Ajoutez également le token comme id_token
+            })
+
+            # Vérifiez si l'utilisateur existe déjà
+            email = request.data.get("email")
+            if email:
+                accounts = SocialAccount.objects.filter(user__email=email)
+                if accounts.count() == 0:
+                    # Créez un nouvel utilisateur si aucun n'est trouvé
+                    user = User.objects.create_user(email=email, username=email)
+                    # Vous pouvez également créer un SocialAccount ici si nécessaire
+                elif accounts.count() > 1:
+                    return Response(
+                        {"detail": "Multiple accounts found for this email. Please use a unique account."},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+
+            # Appelez la méthode parente pour gérer la connexion sociale
+            return super().post(request, *args, **kwargs)
+
+        except Exception as e:
+            return Response(
+                {"detail": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
 

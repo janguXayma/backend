@@ -3,6 +3,8 @@ from django.contrib.auth.password_validation import validate_password
 from rest_framework.validators import UniqueValidator
 from .models import User, Student, Teacher, Profile
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from django.db import models
+from allauth.socialaccount.models import SocialAccount
 
 class UserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True, validators=[UniqueValidator(queryset=User.objects.all())])
@@ -56,6 +58,7 @@ class MyTOPS(TokenObtainPairSerializer):
         token = super().get_token(user)
         token['full_name'] = user.profile.full_name
         token['email'] = user.email
+        token['username'] = user.username
         token['bio'] = user.profile.bio
         token['phone_number'] = user.profile.phone_number
         token['location'] = user.profile.location
@@ -95,4 +98,5 @@ class RegisterSerializer(serializers.Serializer):
             is_teacher = validated_data['role'] == 'Teacher'
         )
         return user
+
 

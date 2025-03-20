@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+# from .managers import CustomUserManager 
 import uuid
 
 # Create your models here.
@@ -18,6 +19,7 @@ class User(AbstractUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
+    # objects = CustomUserManager()
 
     groups = models.ManyToManyField(
         'auth.Group',
