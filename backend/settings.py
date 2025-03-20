@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     #jwt token
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
+    #doc
+    'drf_yasg',
     # Pour Google
     'dj_rest_auth',
     'dj_rest_auth.registration',
