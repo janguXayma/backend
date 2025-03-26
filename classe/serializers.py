@@ -2,10 +2,12 @@ from rest_framework import serializers
 from .models import Classe
 from authentication.models import Student, Teacher
 from django.shortcuts import get_object_or_404
+from authentication.serializers import StudentSerializer
 
 class ClasseSerializer(serializers.ModelSerializer):
     teacher = serializers.HiddenField(default = serializers.CurrentUserDefault())
     name = serializers.CharField(required=True)
+    students = StudentSerializer(many=True, read_only=True)
 
     class Meta:
         model = Classe
