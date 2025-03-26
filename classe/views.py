@@ -108,3 +108,10 @@ class ClasseViewSet(viewsets.ModelViewSet):
         with transaction.atomic():
             classe.students.remove(student)
         return Response({"message": f"Étudiant {student.user.username} est retiré de la classe {classe.name}."}, status=status.HTTP_200_OK)
+    
+
+    def retrieve(self, request, *args, **kwargs):
+        "Recuperer les informations de la classe et les etudiants inscrits"
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
