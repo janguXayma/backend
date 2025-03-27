@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .serializers import MyTOPS, RegisterSerializer, UserSerializer, TeacherSerializer, StudentSerializer
+from .serializers import MyTOPS, RegisterSerializer, UserSerializer, TeacherSerializer, StudentSerializer,ProfileSerializer
 from .models import User, Student, Teacher, Profile
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from dj_rest_auth.registration.views import SocialLoginView
@@ -42,16 +42,9 @@ class RegisterView(APIView):
                 'role': 'Student' if user.is_student else 'Teacher' if user.is_teacher else 'User'
             }
         }, status=201)
-class UserDetailView(generics.RetrieveUpdateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated]
 
-    def get_object(self):
-        return self.request.user
-    
-class UserProfileView(APIView):
-    permission_classes = [IsAuthenticated]  # Seuls les utilisateurs authentifiés peuvent accéder
+class UserProfileUpdateView(APIView):
+    permission_classes = [IsAuthenticated]  # Seuls les utilisateurs authentifiés peuvent modifier leur profil
 
     def get(self, request, *args, **kwargs):
         """
@@ -63,19 +56,44 @@ class UserProfileView(APIView):
         except Profile.DoesNotExist:
             return Response({'error': 'Profile not found for this user.'}, status=404)
 
-        user_data = {
-            'email': user.email,
-            'full_name': profile.full_name,
-            'photo': profile.photo.url if profile.photo else None,
-            'bio': profile.bio,
-            'phone_number': profile.phone_number,
-            'location': profile.location,
-            'birth_date': profile.birth_date,
-            'gender' : profile.gender
-        }
+        # Sérialiser les données du profil
+        serializer = ProfileSerializer(profile)
+        return Response(serializer.data)
 
-        return Response(user_data, status=200)
-    
+    def put(self, request, *args, **kwargs):
+        """
+        Met à jour les informations du profil de l'utilisateur connecté.
+        """
+        user = request.user
+        try:
+            profile = user.profile  # On accède au profil lié à l'utilisateur
+        except Profile.DoesNotExist:
+            return Response({'error': 'Profile not found for this user.'}, status=404)
+
+        # Sérialiser les données entrées par l'utilisateur et les valider
+        serializer = ProfileSerializer(profile, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()  # Enregistrer les modifications
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)
+
+class UserProfileDeleteView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, *args, **kwargs):
+        """
+        Supprime le profil et l'utilisateur connecté.
+        """
+        user = request.user
+        try:
+            profile = user.profile  # On accède au profil lié à l'utilisateur
+            profile.delete()  # Supprimer le profil
+            user.delete()  # Supprimer l'utilisateur
+            return Response({'message': 'Profile deleted successfully.'}, status=204)
+        except Profile.DoesNotExist:
+            return Response({'error': 'Profile not found for this user.'}, status=404)
+
+
 
 User = get_user_model()
 

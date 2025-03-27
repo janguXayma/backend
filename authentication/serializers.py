@@ -35,11 +35,38 @@ class TeacherSerializer(serializers.ModelSerializer):
 #Serialiseur pour le profile utilisateur
 
 class ProfileSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False)
+    email = serializers.EmailField(source="user.email", required=False)
+    username = serializers.CharField(source="user.username", required=False)
+    password = serializers.CharField(source="user.password", write_only=True, required=False)
 
     class Meta:
         model = Profile
-        fields = ['user', 'full_name', 'photo', 'bio', 'phone_number', 'location', 'birth_date','gender']
+        fields = ['user', 'email', 'username', 'password', 'full_name', 'photo', 'bio', 'phone_number', 'location', 'birth_date', 'gender']  # Ajout de "password"
+
+    def update(self, instance, validated_data):
+        """
+        Mise à jour du profil et de l'utilisateur lié.
+        """
+        user_data = validated_data.pop('user', {})
+        
+        # Mise à jour des données du profil
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+
+        # Mise à jour des informations de l'utilisateur
+        user = instance.user
+        if 'email' in user_data:
+            user.email = user_data['email']
+        if 'username' in user_data:
+            user.username = user_data['username']
+        if 'password' in user_data:
+            user.set_password(user_data['password'])  # Hacher le mot de passe
+        user.save()
+
+        return instance
+
 
 #Serialiseur pour le token JWT
 
