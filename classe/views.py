@@ -109,6 +109,29 @@ class ClasseViewSet(viewsets.ModelViewSet):
             classe.students.remove(student)
         return Response({"message": f"Étudiant {student.user.username} est retiré de la classe {classe.name}."}, status=status.HTTP_200_OK)
     
+    @action(detail=False, methods=['post'], url_path='remove-student')
+    def remove_student(self, request, *args, **kwargs):
+        """Permet à un enseignant de supprimer un étudiant d'une classe."""
+        user = request.user
+        if user.is_anonymous:
+            return Response({"detail": "Authentification requise."}, status=status.HTTP_401_UNAUTHORIZED)
+        teacher = Teacher.objects.filter(user=user).first()
+        if not teacher:
+            return Response({"detail": "Vous devez être un enseignant pour supprimer un étudiant d'une classe."}, status=status.HTTP_403_FORBIDDEN)
+        code_activation = request.data.get('code_activation')
+        student_id = request.data.get('student_id')
+        if not code_activation or not student_id:
+            return Response({"detail": "Veuillez fournir un code d'activation et l'ID de l'étudiant."}, status=status.HTTP_400_BAD_REQUEST)
+        classe = get_object_or_404(Classe, code_activation=code_activation)
+        if classe.teacher != teacher:
+            return Response({"detail": "Vous n'êtes pas l'enseignant de cette classe."}, status=status.HTTP_403_FORBIDDEN)
+        student = get_object_or_404(Student, user__id=student_id)
+
+        if not classe.students.filter(user__id=student.user.id).exists():
+            return Response({"message": "Cet étudiant ne fait pas partie de cette classe."}, status=status.HTTP_200_OK)
+        with transaction.atomic():
+            classe.students.remove(student)
+        return Response({"message": f"Étudiant {student.user.username} est retiré de la classe {classe.name}."}, status=status.HTTP_200_OK)
 
     def retrieve(self, request, *args, **kwargs):
         "Recuperer les informations de la classe et les etudiants inscrits"
