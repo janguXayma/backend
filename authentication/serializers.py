@@ -55,6 +55,7 @@ class MyTOPS(TokenObtainPairSerializer):
     def get_token(cls, user):
         token = super().get_token(user)
         token['full_name'] = user.profile.full_name
+        token['username'] = user.username
         token['email'] = user.email
         token['bio'] = user.profile.bio
         token['phone_number'] = user.profile.phone_number
