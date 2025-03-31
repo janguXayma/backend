@@ -35,11 +35,17 @@ class StatisticStudentSerializer(serializers.ModelSerializer):
 class StatisticGlobaleSerializer(serializers.ModelSerializer):
     teacher_name = serializers.CharField(source='teacher.user.username', read_only=True)
     classe_name = serializers.CharField(source='classe.name', read_only=True)
+    top_students = serializers.JSONField()
 
     class Meta:
         model = StatisticGlobale
         fields = '__all__'
-        read_only_fields = ('teacher', 'average_score', 'created_at', 'updated_at')
+        read_only_fields = ('teacher', 'average_score', 'created_at', 'updated_at','top_students')
+    
+    def get_top_students(self, obj):
+        """Récupère les 10 meilleures notes triées par ordre décroissant."""
+        top_students = StatisticStudent.objects.filter(classe=obj.classe).order_by('-score')[:10]
+        return [{'student_name': student.student.user.username, 'score': student.score} for student in top_students]
 
 
 class StatisticSerializer(serializers.ModelSerializer):

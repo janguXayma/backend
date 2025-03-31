@@ -60,6 +60,9 @@ class StatisticStudent(models.Model):
         self.best_score = max(max_score or 0, self.score)
         
         super().save(*args, **kwargs)
+        #Mise a jour du statistiqueGlobale
+        statistic_global,created = StatisticGlobale.objects.get_or_create(classe=self.classe,teacher=self.classe.teacher)
+        statistic_global.update_statistic()
     def update_statistic(self, new_score):
         """Met à jour les statistiques d'un étudiant."""
         self.total_exercises_submitted += 1
@@ -82,8 +85,44 @@ class StatisticGlobale(models.Model):
     classe = models.OneToOneField(Classe, on_delete=models.CASCADE, related_name='global_statistics')
     average_score = models.FloatField(default=0.0)
     best_score = models.FloatField(default=0.0)
+    top_students = models.JSONField(default=list, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        """Calcule la moyenne et le meilleur score avant chaque sauvegarde."""
+        # Récupère toutes les statistiques des étudiants de la classe
+        student_statistics = StatisticStudent.objects.filter(classe=self.classe)
+        
+        if student_statistics.exists():
+            total_score = sum(stat.score for stat in student_statistics)
+            self.average_score = total_score / student_statistics.count()
+            self.best_score = max(stat.score for stat in student_statistics)
+            top_students = student_statistics[:10]
+            self.top_students = [
+                {"student_name": stat.student.user.username, "score": stat.score}
+                for stat in top_students                 
+                ]
+        else:
+            self.average_score = 0.0
+            self.best_score = 0.0
+            self.top_students = []
+        
+        super().save(*args, **kwargs)
+
+    def update_statistic(self):
+        """Met à jour les statistiques globales de la classe."""
+        student_statistics = StatisticStudent.objects.filter(classe=self.classe)
+        
+        if student_statistics.exists():
+            total_score = sum(stat.score for stat in student_statistics)
+            self.average_score = total_score / student_statistics.count()
+            self.best_score = max(stat.score for stat in student_statistics)
+        else:
+            self.average_score = 0.0
+            self.best_score = 0.0
+        
+        self.save()
 
     def __str__(self):
         return f"Statistiques globales de la classe {self.classe.name} - Enseignant: {self.teacher.user.username}"
