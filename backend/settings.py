@@ -4,6 +4,8 @@ from pathlib import Path
 from dotenv import load_dotenv
 from corsheaders.defaults import default_headers
 
+from corsheaders.defaults import default_headers
+
 
 load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -28,6 +30,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'django.contrib.sites',
     'rest_framework',
     'corsheaders',
@@ -59,19 +62,37 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'allauth.account.middleware.AccountMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.http.ConditionalGetMiddleware',
     'django.middleware.http.ConditionalGetMiddleware',
 ]
 SIMPLE_HISTORY_USER_MODEL = 'authentication.User'
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',  # Ton front en React
     'http://127.0.0.1:3000',  # Autre variation
+    'http://localhost:3000',  # Ton front en React
+    'http://127.0.0.1:3000',  # Autre variation
     'http://localhost:8000',
+    'http://127.0.0.1:8000',
     'http://127.0.0.1:8000',
 ]
 CORS_ALLOW_CREDENTIALS = True  # Autorise les cookies et l'authentification avec CORS
 CORS_ORIGIN_ALLOW_ALL = False  # Ne pas autoriser toutes les origines
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'Cross-Origin-Opener-Policy',
+    'Cross-Origin-Embedder-Policy',
+]
+
+# Entête COOP à ajouter pour permettre une interaction entre différentes fenêtres
+CORS_EXPOSE_HEADERS = [
+    'Cross-Origin-Opener-Policy',
+    'Cross-Origin-Embedder-Policy',
+]
+# settings.py
+SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin-allow-popups'
+SECURE_CROSS_ORIGIN_EMBEDDER_POLICY = 'require-corp'
 CORS_ALLOW_HEADERS = list(default_headers) + [
     'Cross-Origin-Opener-Policy',
     'Cross-Origin-Embedder-Policy',
@@ -205,8 +226,12 @@ USE_TZ = True
 STATIC_URL = 'static/'
 # STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')] 
 # STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')] 
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 AUTH_USER_MODEL = 'authentication.User'
+
+SITE_ID = 1
 
 SITE_ID = 1
 
@@ -219,6 +244,42 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ],
 }
+# Configuration AllAuth pour éviter les emails de confirmation
+# ACCOUNT_AUTHENTICATION_METHOD = 'email'
+# ACCOUNT_EMAIL_REQUIRED = True
+# ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_LOGIN_METHODS = {"email"}
+ACCOUNT_SIGNUP_FIELDS = ["email*", "username*", "password1*", "password2*"]
+
+
+# Permettre l'authentification sociale
+REST_USE_JWT = True
+SOCIALACCOUNT_QUERY_EMAIL = True
+SOCIALACCOUNT_STORE_TOKENS = True
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': os.getenv('GOOGLE_CLIENT_ID'),
+            'secret': os.getenv('GOOGLE_SECRET'),
+            'key': ''
+        },
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        },
+        'FETCH_USERINFO':True,
+    }
+}
+
+
 # Configuration AllAuth pour éviter les emails de confirmation
 # ACCOUNT_AUTHENTICATION_METHOD = 'email'
 # ACCOUNT_EMAIL_REQUIRED = True

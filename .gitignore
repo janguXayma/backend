@@ -2,3 +2,4 @@
 venv/
 migrations/
 logs/
+db.sqlite3
