@@ -49,14 +49,20 @@ class StatisticStudent(models.Model):
             self.total_exercises_corrected += 1
         
         # Calcule la moyenne et le taux de succès
-        if self.total_exercises_submitted > 0:
-            self.average_score = (
-                (self.average_score * (self.total_exercises_submitted - 1)) + self.score
-            ) / self.total_exercises_submitted
-            self.success_rate = (self.total_exercises_corrected / self.total_exercises_submitted) * 100
+        # if self.total_exercises_submitted > 0:
+        #     self.average_score = (
+        #         (self.average_score * (self.total_exercises_submitted - 1)) + self.score
+        #     ) / self.total_exercises_submitted
+        #     self.success_rate = (self.total_exercises_corrected / self.total_exercises_submitted) * 100
+        
+        student_statistics = StatisticStudent.objects.filter(student = self.student,classe = self.classe)
+        if student_statistics.exists():
+            total_score = student_statistics.aggregate(models.Sum('score'))['score__sum'] or 0
+            counts_score = student_statistics.count()
+            self.average_score = total_score / counts_score if counts_score > 0 else 0.0
         
         # Met à jour le meilleur score
-        max_score = StatisticStudent.objects.filter(student=self.student, classe=self.classe).aggregate(models.Max('score'))['score__max']
+        max_score = student_statistics.aggregate(models.Max('score'))['score__max']
         self.best_score = max(max_score or 0, self.score)
         
         super().save(*args, **kwargs)
@@ -98,7 +104,7 @@ class StatisticGlobale(models.Model):
             total_score = sum(stat.score for stat in student_statistics)
             self.average_score = total_score / student_statistics.count()
             self.best_score = max(stat.score for stat in student_statistics)
-            top_students = student_statistics[:10]
+            top_students = student_statistics.order_by('-score')[:10]
             self.top_students = [
                 {"student_name": stat.student.user.username, "score": stat.score}
                 for stat in top_students                 

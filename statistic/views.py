@@ -26,7 +26,7 @@ class StatisticStudentViewSet(viewsets.ModelViewSet):
         if not student_id:
             return Response({"error": "Le paramètre 'student_id' est requis."}, status=400)
 
-        statistics = StatisticStudent.objects.filter(student__id=student_id)
+        statistics = StatisticStudent.objects.filter(student_id=student_id)
         serializer = self.get_serializer(statistics, many=True)
         return Response(serializer.data)
 
