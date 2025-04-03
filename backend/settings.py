@@ -33,11 +33,14 @@ INSTALLED_APPS = [
     'corsheaders',
     'authentication',
     'classe',
+    'statistic',
     #jwt token
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
     #doc
     'drf_yasg',
+    #history
+    'simple_history',
     # Pour Google
     'dj_rest_auth',
     'dj_rest_auth.registration',
@@ -52,6 +55,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'simple_history.middleware.HistoryRequestMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'allauth.account.middleware.AccountMiddleware',
@@ -59,7 +63,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.http.ConditionalGetMiddleware',
 ]
-
+SIMPLE_HISTORY_USER_MODEL = 'authentication.User'
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',  # Ton front en React
     'http://127.0.0.1:3000',  # Autre variation

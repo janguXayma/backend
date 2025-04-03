@@ -1,0 +1,64 @@
+from rest_framework import serializers
+from .models import Statistic, StatisticStudent, StatisticGlobale
+from django.shortcuts import get_object_or_404
+from authentication.models import Teacher
+from rest_framework.permissions import IsAuthenticated 
+
+
+class StatisticStudentSerializer(serializers.ModelSerializer):
+    student_name = serializers.CharField(source='student.user.username', read_only=True)
+    classe_name = serializers.CharField(source='classe.name', read_only=True)
+
+    class Meta:
+        model = StatisticStudent
+        fields = '__all__'
+        read_only_fields = ('teacher', 'average_score', 'success_rate', 'created_at', 'updated_at')
+
+    def create(self, validated_data):
+        request = self.context.get('request')
+        user = request.user
+        teacher_obj = get_object_or_404(Teacher, user=user)
+
+        classe = validated_data.get('classe')
+        student = validated_data.get('student')
+
+        if classe.teacher != teacher_obj:
+            raise serializers.ValidationError("Cette classe ne vous appartient pas.")
+
+        if not classe.students.filter(user=student.user).exists():
+            raise serializers.ValidationError("Cet étudiant n'est pas inscrit dans cette classe.")
+
+        return StatisticStudent.objects.create(**validated_data)  # Supprime 'teacher'
+
+
+
+class StatisticGlobaleSerializer(serializers.ModelSerializer):
+    teacher_name = serializers.CharField(source='teacher.user.username', read_only=True)
+    classe_name = serializers.CharField(source='classe.name', read_only=True)
+    top_students = serializers.JSONField()
+
+    class Meta:
+        model = StatisticGlobale
+        fields = '__all__'
+        read_only_fields = ('teacher', 'average_score', 'created_at', 'updated_at','top_students')
+    
+    def get_top_students(self, obj):
+        """Récupère les 10 meilleures notes triées par ordre décroissant."""
+        top_students = StatisticStudent.objects.filter(classe=obj.classe).order_by('-score')[:10]
+        return [{'student_name': student.student.user.username, 'score': student.score} for student in top_students]
+
+
+class StatisticSerializer(serializers.ModelSerializer):
+    teacher_name = serializers.CharField(source='teacher.user.username', read_only=True)
+    classe_name = serializers.CharField(source='classe.name', read_only=True)
+
+    class Meta:
+        model = Statistic
+        fields = '__all__'
+        read_only_fields = ('teacher', 'success_rate', 'created_at', 'updated_at')
+    def create(self, validated_data):
+        request = self.context.get('request')
+        user = request.user
+        teacher_obj = get_object_or_404(Teacher, user=user)
+        validated_data['teacher'] = teacher_obj
+        return Statistic.objects.create(**validated_data)
