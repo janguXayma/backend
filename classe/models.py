@@ -3,6 +3,7 @@ from authentication.models import Student,Teacher
 import uuid
 import random
 import string
+from simple_history.models import HistoricalRecords
 
 
 def generate_activation_code():
@@ -23,6 +24,7 @@ class Classe(models.Model):
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='classes')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    history = HistoricalRecords()
     def __str__(self):
         return self.name
 

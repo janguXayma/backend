@@ -89,7 +89,7 @@ class MyTOPS(TokenObtainPairSerializer):
         token['bio'] = user.profile.bio
         token['phone_number'] = user.profile.phone_number
         token['location'] = user.profile.location
-        token['birth_date'] = user.profile.birth_date
+        # token['birth_date'] = user.profile.birth_date
         token['role'] = 'student' if user.is_student else 'teacher' if user.is_teacher else 'user'
         token['gender'] = user.profile.gender
         return token

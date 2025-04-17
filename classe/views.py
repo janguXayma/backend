@@ -12,6 +12,8 @@ from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db import transaction
+from simple_history.utils import update_change_reason
+from django.utils import timezone
 
 # Create your views here.
 
@@ -81,6 +83,10 @@ class ClasseViewSet(viewsets.ModelViewSet):
 
         with transaction.atomic():
             classe.students.add(student)
+            classe.updated_at = timezone.now()
+            classe.save()
+            # Enregistrement de l'historique de la classe
+            update_change_reason(classe,  f"Étudiant {student.user.username} a rejoint la classe.")
         return Response({"message": f"Étudiant {student.user.username} ajouté à la classe {classe.name}."}, status=status.HTTP_200_OK)
     
 
@@ -107,6 +113,10 @@ class ClasseViewSet(viewsets.ModelViewSet):
 
         with transaction.atomic():
             classe.students.remove(student)
+            classe.updated_at = timezone.now()
+            classe.save()
+            # Enregistrement de l'historique de la classe
+            update_change_reason(classe,  f"Étudiant {student.user.username} a quitté la classe.")
         return Response({"message": f"Étudiant {student.user.username} est retiré de la classe {classe.name}."}, status=status.HTTP_200_OK)
     
     @action(detail=False, methods=['post'], url_path='remove-student')
@@ -131,6 +141,10 @@ class ClasseViewSet(viewsets.ModelViewSet):
             return Response({"message": "Cet étudiant ne fait pas partie de cette classe."}, status=status.HTTP_200_OK)
         with transaction.atomic():
             classe.students.remove(student)
+            classe.updated_at = timezone.now()
+            classe.save()
+            # Enregistrement de l'historique de la classe
+            update_change_reason(classe,  f"Étudiant {student.user.username} a été retiré de la classe.")
         return Response({"message": f"Étudiant {student.user.username} est retiré de la classe {classe.name}."}, status=status.HTTP_200_OK)
 
     def retrieve(self, request, *args, **kwargs):

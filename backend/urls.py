@@ -32,10 +32,27 @@ schema_view = get_schema_view(
     public=True,
     permission_classes=[AllowAny]
 )
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+from rest_framework.permissions import AllowAny
+
+schema_view = get_schema_view(
+    openapi.Info(
+        title="API de Gestion des Classes",
+        default_version='v1',
+        description="Documentation de l'API de JanguXayma.",
+        terms_of_service="https://www.google.com/policies/terms/",
+        contact=openapi.Contact(email="janguxayma@exemple.com"),
+        license=openapi.License(name="ESP"),
+    ),
+    public=True,
+    permission_classes=[AllowAny]
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/',include('authentication.urls')),
     path('api/v1/', include('classe.urls')),
+    path('api/v1/',include('statistic.urls')),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='swagger-docs'),
 ]
