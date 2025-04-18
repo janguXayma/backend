@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'exercices',
 ]
 
 MIDDLEWARE = [
@@ -368,7 +369,10 @@ SIMPLE_JWT = {
 
 
 
-
+# Créer le dossier chiffré au démarrage
+import os
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+os.makedirs(os.path.join(MEDIA_ROOT, 'encrypted_exercises'), exist_ok=True)
 
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 

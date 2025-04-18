@@ -1,0 +1,246 @@
+[33mcommit 4577a05bbb7f31a5d2eaf35516acf29a00c74cb2[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeatures/mouhamed[m[33m, [m[1;31morigin/features/mouhamed[m[33m)[m
+Author: mouhameddiakhate <momo9613091@gmail.com>
+Date:   Sun Mar 23 15:36:29 2025 +0000
+
+    Ajout de l'app sujets d'exam
+
+[33mcommit 50d95542bdfe213e6ea5304a7397eea66bdb490c[m[33m ([m[1;31morigin/dev[m[33m)[m
+Merge: 0f967a4 328adf8
+Author: Omar DIOP <105825238+OmarDIOP0@users.noreply.github.com>
+Date:   Thu Mar 20 21:55:17 2025 +0000
+
+    Merge pull request #2 from janguXayma/features/omar
+    
+    Features/omar
+
+[33mcommit 328adf828e2a3b16769a33da3f6857d231e15aca[m[33m ([m[1;31morigin/features/omar[m[33m)[m
+Author: OmarDIOP0 <odiop6170@gmail.com>
+Date:   Thu Mar 20 21:53:52 2025 +0000
+
+    Ajout classe joint et leave classe 🚀
+
+[33mcommit bbdb15bc3ee6a3cc34b6d6f1197db02676e1c760[m
+Author: OmarDIOP0 <odiop6170@gmail.com>
+Date:   Thu Mar 20 20:40:39 2025 +0000
+
+    Ajouter classe et Rejoindre Classe
+
+[33mcommit 712dd578be05f28995c517966039d4337312acdc[m
+Author: OmarDIOP0 <odiop6170@gmail.com>
+Date:   Thu Mar 20 18:25:45 2025 +0000
+
+    ajout_de_la_documentation_swagger
+
+[33mcommit 5b260124f476791c8b03a3735040aab2b5a8425e[m
+Author: OmarDIOP0 <odiop6170@gmail.com>
+Date:   Thu Mar 20 18:21:18 2025 +0000
+
+    ajout_de_la_fonctionnalité_classe
+
+[33mcommit 854984af2d8715c9d1763d8c601ada9f81fa21b3[m
+Author: OmarDIOP0 <odiop6170@gmail.com>
+Date:   Thu Mar 20 17:45:44 2025 +0000
+
+    ajout du model classe
+
+[33mcommit c20506c9b0212a3e4e00924322b276fccac59459[m
+Author: OmarDIOP0 <odiop6170@gmail.com>
+Date:   Tue Mar 18 18:20:51 2025 +0000
+
+    authentification google
+
+[33mcommit 00610b47c17b4c21ed21b02d12209b5af5c08311[m
+Author: OmarDIOP0 <odiop6170@gmail.com>
+Date:   Sun Mar 16 18:42:43 2025 +0000
+
+    social auth
+
+[33mcommit d90f98518e33b02a77aa98e1c5b86a7a8d0b1572[m
+Author: OmarDIOP0 <odiop6170@gmail.com>
+Date:   Sun Mar 16 18:42:18 2025 +0000
+
+    social auth
+
+[33mcommit e692f7f9b29e0ac871549b36f9f13526e5c951df[m
+Author: OmarDIOP0 <odiop6170@gmail.com>
+Date:   Sun Mar 16 17:28:27 2025 +0000
+
+    installation des dependances
+
+[33mcommit 0f967a443c552f6e9400c755883ed6edefa64334[m
+Merge: d3bd8f5 15646af
+Author: Omar DIOP <105825238+OmarDIOP0@users.noreply.github.com>
+Date:   Sun Mar 16 16:40:49 2025 +0000
+
+    Merge pull request #1 from janguXayma/features/omar
+    
+    Pull Request Features/omar to dev
+
+[33mcommit 15646af2849785f8c6791d3c99475fd70cf1edd8[m
+Author: OmarDIOP0 <odiop6170@gmail.com>
+Date:   Thu Mar 13 17:22:02 2025 +0000
+
+    Correction de quelque bugs 🦠
+
+[33mcommit 970d072970ee0d499f53c727aa045a9c0fcfc566[m
+Author: OmarDIOP0 <odiop6170@gmail.com>
+Date:   Thu Mar 13 17:21:21 2025 +0000
+
+    Correction de quelque bugs 🦠
+
+[33mcommit 7f68c11d5cc8ff36d3c2310571bce43f01f0a9c2[m
+Author: OmarDIOP0 <odiop6170@gmail.com>
+Date:   Thu Mar 13 16:31:51 2025 +0000
+
+    Configuration du settings
+
+[33mcommit 52777766d663facfdfac83cfb8a5077098ac1380[m
+Author: OmarDIOP0 <odiop6170@gmail.com>
+Date:   Thu Mar 13 16:25:30 2025 +0000
+
+    Integration des logs
+
+[33mcommit ffc098c7228f36e60842a6911ff0abd377bd35b7[m
+Author: OmarDIOP0 <odiop6170@gmail.com>
+Date:   Thu Mar 13 16:22:02 2025 +0000
+
+    Urls de notre application
+
+[33mcommit 34054f34a203a0999ab1f3d9b8c08176d38ae558[m
+Author: OmarDIOP0 <odiop6170@gmail.com>
+Date:   Thu Mar 13 16:20:54 2025 +0000
+
+    Configuration de l_url
+
+[33mcommit ee305810fdcad09e994f5a66d8c450db484471fc[m
+Author: OmarDIOP0 <odiop6170@gmail.com>
+Date:   Thu Mar 13 16:19:01 2025 +0000
+
+    Implementation de la vue de creation d'un utilisateur
+
+[33mcommit 2367600158df8281a618d1c27278c01a38fbe489[m
+Author: OmarDIOP0 <odiop6170@gmail.com>
+Date:   Thu Mar 13 16:11:50 2025 +0000
+
+    Serializers des donnees d'ajout
+
+[33mcommit fb97d992e0a8ed9ce7839d9a5b1640751efd7ca0[m
+Author: OmarDIOP0 <odiop6170@gmail.com>
+Date:   Thu Mar 13 15:43:28 2025 +0000
+
+    integration des modeles Professeur et Etudiant ⚒️
+
+[33mcommit 1a55442a1890dda0196445821d91c49c19125591[m
+Author: OmarDIOP0 <odiop6170@gmail.com>
+Date:   Thu Mar 13 15:32:04 2025 +0000
+
+    integration des modeles Professeur et Etudiant ⚒️
+
+[33mcommit 32f8a66ae088e90f8fd144cf11e40fcda87fdac2[m
+Author: OmarDIOP0 <odiop6170@gmail.com>
+Date:   Thu Mar 13 15:10:12 2025 +0000
+
+    installation_dependance_jwt
+
+[33mcommit c564287e52b1de49807de60dde3394bcd1d1c237[m
+Author: OmarDIOP0 <odiop6170@gmail.com>
+Date:   Thu Mar 13 15:04:50 2025 +0000
+
+    mise_a_jour du point d_entree
+
+[33mcommit 770ec178b860f4d7d8f9bec1d4ca5d9e4b19a11e[m
+Merge: 1172db3 6936d3b
+Author: OmarDIOP0 <odiop6170@gmail.com>
+Date:   Sat Mar 8 12:58:19 2025 +0000
+
+    Merge branch 'main' of https://github.com/janguXayma/backend into features/omar
+
+[33mcommit 6936d3bd3dfa77b6c7625c1dca03096d4c11df14[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmouhamed[m[33m, [m[1;32mfeature-ma-feature[m[33m)[m
+Author: OmarDIOP0 <odiop6170@gmail.com>
+Date:   Sat Mar 8 12:57:24 2025 +0000
+
+    modification env.example 🧾
+
+[33mcommit 1172db3076f311fbcba6f0ceaf78202fc9a94372[m
+Author: OmarDIOP0 <odiop6170@gmail.com>
+Date:   Fri Mar 7 16:26:35 2025 +0000
+
+    Branche features/omar
+
+[33mcommit d3bd8f5ffafaf36c647d36c37d7bd16cc4dc9d15[m[33m ([m[1;31morigin/features/moustapha[m[33m)[m
+Author: OmarDIOP0 <odiop6170@gmail.com>
+Date:   Fri Mar 7 16:23:27 2025 +0000
+
+    Branche Dev 🚀
+
+[33mcommit 2fcec7459659d87f3bcf75538e4aeeaac1df68ca[m
+Author: OmarDIOP0 <odiop6170@gmail.com>
+Date:   Fri Mar 7 16:21:16 2025 +0000
+
+    teste du Celery 🐽
+
+[33mcommit 70cb49bcccc289ab0536b597dd2c3cb519027e20[m
+Author: OmarDIOP0 <odiop6170@gmail.com>
+Date:   Fri Mar 7 15:56:22 2025 +0000
+
+    correction de quelques bugs 🦠
+
+[33mcommit 706e7da709c23140da72fb2fe4835c59d2fb329f[m
+Author: OmarDIOP0 <odiop6170@gmail.com>
+Date:   Fri Mar 7 15:23:35 2025 +0000
+
+    updated du README.md 🚀
+
+[33mcommit 85f373195ce01a6cf677016781863d215d863468[m
+Author: OmarDIOP0 <odiop6170@gmail.com>
+Date:   Fri Mar 7 15:17:32 2025 +0000
+
+    configuration de la BD PostGres⏹️
+
+[33mcommit 3237af70fb2bd1d309f8fbe53b790f907195ce42[m
+Author: OmarDIOP0 <odiop6170@gmail.com>
+Date:   Fri Mar 7 15:06:38 2025 +0000
+
+    configuration du celery 🐽
+
+[33mcommit 6efa626f39024e842ea7cdc5d257638d2ca304cb[m
+Author: OmarDIOP0 <odiop6170@gmail.com>
+Date:   Fri Mar 7 14:56:11 2025 +0000
+
+    ajout des dependances
+
+[33mcommit b3e27026cd7692d2ee924a9a4276020011777532[m
+Author: OmarDIOP0 <odiop6170@gmail.com>
+Date:   Fri Mar 7 14:51:22 2025 +0000
+
+    automatisation du point d_entree 🤖
+
+[33mcommit cc952c1aabe39292b775c34dce9b542d5231e98a[m
+Author: OmarDIOP0 <odiop6170@gmail.com>
+Date:   Fri Mar 7 14:48:16 2025 +0000
+
+    ajout du docker-compose 🐳
+
+[33mcommit fe1bc9233a239a9f9f914e45ee7c8d4c1e416c8c[m
+Author: OmarDIOP0 <odiop6170@gmail.com>
+Date:   Fri Mar 7 14:46:20 2025 +0000
+
+    ajout du Dockerfile 🐳
+
+[33mcommit 4f5382ce4f9103c7b52bb37080c62b1f155fd23f[m
+Author: OmarDIOP0 <odiop6170@gmail.com>
+Date:   Fri Mar 7 14:40:17 2025 +0000
+
+    ajout de l_application auth 🔐
+
+[33mcommit 0cb6e2a1e85566cc41eb5ac162fe435734553a92[m[33m ([m[1;32mmain[m[33m)[m
+Author: OmarDIOP0 <odiop6170@gmail.com>
+Date:   Sun Mar 2 23:28:44 2025 +0000
+
+    edition du README.md 🚀
+
+[33mcommit edfd7f132aaa25bc98d8db57e9f47a69d15155b3[m
+Author: OmarDIOP0 <odiop6170@gmail.com>
+Date:   Sun Mar 2 23:21:10 2025 +0000
+
+    first commit
