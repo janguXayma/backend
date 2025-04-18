@@ -16,22 +16,31 @@ import os
 class ExerciseViewSet(viewsets.ModelViewSet):
     queryset = Exercise.objects.all()
     serializer_class = ExerciseSerializer
-    permission_classes = [IsAuthenticated, IsTeacher]
+    # permission_classes = [IsAuthenticated, IsTeacher]
+    permission_classes = [IsAuthenticated]
 
+    # def get_queryset(self):
+    #     """Filtre les exercices par utilisateur et statut de publication"""
+    #     queryset = super().get_queryset()
+
+    #     # Filtre supplémentaire pour les requêtes GET
+    #     if self.request.method == 'GET':
+    #         is_published = self.request.query_params.get('published')
+    #         if is_published in ['true', 'false']:
+    #             queryset = queryset.filter(is_published=is_published == 'true')
+
+    #     if not self.request.user.is_staff:
+    #         queryset = queryset.filter(created_by=self.request.user)
+
+    #     return queryset
     def get_queryset(self):
-        """Filtre les exercices par utilisateur et statut de publication"""
         queryset = super().get_queryset()
 
-        # Filtre supplémentaire pour les requêtes GET
-        if self.request.method == 'GET':
-            is_published = self.request.query_params.get('published')
-            if is_published in ['true', 'false']:
-                queryset = queryset.filter(is_published=is_published == 'true')
+        if self.request.user.is_staff:
+            return queryset.filter(created_by=self.request.user)
 
-        if not self.request.user.is_staff:
-            queryset = queryset.filter(created_by=self.request.user)
+        return queryset.filter(is_published=True)
 
-        return queryset
 
     def perform_create(self, serializer):
         """Validation de la date limite avant sauvegarde"""
