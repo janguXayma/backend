@@ -7,6 +7,7 @@ from rest_framework import status, permissions
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .serializers import ReponseSerializer
 from .models import Reponse
+import os
 
 class UploadPDFAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]  # Auth obligatoire
@@ -15,16 +16,23 @@ class UploadPDFAPIView(APIView):
         serializer = ReponseSerializer(data=request.data, context={'request': request})
         
         if serializer.is_valid():
-            serializer.save()
-            return Response(
-                {"message": "Fichier soumis avec succès !"},
-                status=status.HTTP_201_CREATED
-            )
-        
+            instance = serializer.save()  # On récupère l'instance créée
+            response_data = ReponseSerializer(instance).data  # On la re-sérialise pour inclure l'ID
+            response_data["message"] = "Fichier soumis avec succès !"
+            return Response(response_data, status=status.HTTP_201_CREATED)
+
         return Response(
             {"message": "Une erreur s'est produite.", "errors": serializer.errors},
             status=status.HTTP_400_BAD_REQUEST
         )
+    
+class GetUploadedPDFsAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        uploads = Reponse.objects.all().order_by('-uploaded_at') 
+        serializer = ReponseSerializer(uploads, many=True)
+        return Response(serializer.data)
 
 
 class DownloadDecryptedPDFAPIView(APIView):
@@ -61,12 +69,16 @@ class PDFToTextAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, reponse_id, format=None):
-        """Extrait le texte d'un PDF et retourne un fichier .txt"""
+        """Extrait le texte d'un PDF et retourne son contenu en .txt"""
         reponse = get_object_or_404(Reponse, id=reponse_id)
         
-        text_content = reponse.pdf_to_text()
-        if not text_content:
+        text_file_path = reponse.pdf_to_text()
+        if not text_file_path or not os.path.exists(text_file_path):
             return JsonResponse({"error": "Impossible d'extraire le texte du PDF."}, status=400)
+
+        # Lire le contenu du fichier texte
+        with open(text_file_path, 'r', encoding='utf-8') as f:
+            text_content = f.read()
 
         response = HttpResponse(text_content, content_type="text/plain")
         response['Content-Disposition'] = f'attachment; filename="{reponse.get_decrypted_pdf_name()}_extracted.txt"'

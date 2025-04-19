@@ -4,10 +4,15 @@ from .models import Reponse
 
 class ReponseSerializer(serializers.ModelSerializer):
     pdf_file = serializers.FileField()
+    student_name = serializers.SerializerMethodField() 
 
     class Meta:
         model = Reponse
-        fields = ['pdf_file']
+        # fields = ['pdf_file']
+        fields = ['id', 'pdf_file', 'uploaded_at', 'student_name']
+    
+    def get_student_name(self, obj):
+        return obj.user.username 
 
     def validate_pdf_file(self, value):
         """ Vérifie que le fichier est bien un PDF """

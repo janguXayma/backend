@@ -116,24 +116,25 @@ class Reponse(models.Model):
         return True 
 
 
+
     def pdf_to_text(self):
         """Déchiffre le fichier PDF, extrait son contenu texte et sauvegarde un fichier .txt"""
         if not self.pdf_file or not isinstance(self.pdf_file.name, str):
-            return None  # Aucun fichier associé
+            return None
 
-        # Récupérer uniquement le nom du fichier sans extension
         encrypted_filename = os.path.basename(self.pdf_file.name).replace('.pdf', '')
         decrypted_filename = decrypt_text(encrypted_filename)
 
         try:
-            # Construire le chemin du fichier PDF chiffré
-            encrypted_pdf_path = os.path.join(settings.MEDIA_ROOT, 'pdf_uploads', self.user.username, f"{encrypted_filename}.pdf")
+            encrypted_pdf_path = os.path.join(
+                settings.MEDIA_ROOT, 'pdf_uploads', self.user.username, f"{encrypted_filename}.pdf"
+            )
 
             if not os.path.exists(encrypted_pdf_path):
                 print("Fichier PDF introuvable.")
-                return None  # Fichier introuvable
+                return None
 
-            # Lire le PDF et extraire le texte
+            # Lire et extraire le texte
             text_content = []
             with open(encrypted_pdf_path, 'rb') as pdf_file:
                 reader = PyPDF2.PdfReader(pdf_file)
@@ -142,27 +143,24 @@ class Reponse(models.Model):
                     if extracted_text:
                         text_content.append(extracted_text)
 
-            # Vérifier si du texte a été extrait
             extracted_text = "\n".join(text_content) if text_content else None
             if not extracted_text:
-                print("Aucun texte extrait du PDF.")
+                print("Aucun texte extrait.")
                 return None
 
-            # Définir le dossier de sortie pour les fichiers texte
+            # Dossier de sortie
             txt_output_dir = os.path.join(settings.MEDIA_ROOT, 'txt_outputs', self.user.username)
-            os.makedirs(txt_output_dir, exist_ok=True)  # Créer le dossier s'il n'existe pas
+            os.makedirs(txt_output_dir, exist_ok=True)
 
-            # Construire le chemin du fichier texte de sortie
             txt_output_path = os.path.join(txt_output_dir, f"{decrypted_filename}_extracted.txt")
 
-            # Sauvegarder le texte extrait dans un fichier .txt
             with open(txt_output_path, 'w', encoding='utf-8') as txt_file:
                 txt_file.write(extracted_text)
 
-            return txt_output_path  # Retourner le chemin du fichier .txt sauvegardé
+            return txt_output_path
 
         except Exception as e:
-            print(f"Erreur lors de l'extraction du texte : {str(e)}")
+            print(f"Erreur lors de l'extraction : {str(e)}")
             return None
 
     def __str__(self):
